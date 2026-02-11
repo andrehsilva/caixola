@@ -35,10 +35,7 @@ def edit_homepage():
         'services': ServicesSectionForm(obj=content),
         'values': ValuesSectionForm(obj=content),
         'structure': StructureSectionForm(obj=content),
-        'videos': VideosSectionForm(obj=content),
-        'blog': BlogSectionForm(obj=content),
-        'cta': CtaSectionForm(obj=content),
-        'location': LocationSectionForm(obj=content)
+        
     }
 
     ordered_sections_admin = content.section_order.split(',') if content.section_order else []
@@ -141,10 +138,7 @@ def update_structure_section():
             'services': ServicesSectionForm(obj=content),
             'values': ValuesSectionForm(obj=content),
             'structure': form,  # Usa o formulário com erros
-            'videos': VideosSectionForm(obj=content),
-            'blog': BlogSectionForm(obj=content),
-            'cta': CtaSectionForm(obj=content),
-            'location': LocationSectionForm(obj=content)
+           
         }
         ordered_sections_admin = content.section_order.split(',') if content.section_order else []
         return render_template(
