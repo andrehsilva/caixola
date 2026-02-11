@@ -62,8 +62,7 @@ def get_media_url(filename):
     if filename == 'default.jpg':
         return url_for('static', filename='default.jpg')
 
-    # Pega a URL do Supabase das configurações
-    supabase_url = current_app.config.get('SUPABASE_URL')
+    supabase_url = current_app.config.get('SUPABASE_URL').rstrip('/')
     return f"{supabase_url}/storage/v1/object/public/uploads/{filename}"
 
 def delete_file_from_uploads(filename):

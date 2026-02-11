@@ -12,9 +12,15 @@ from .extensions import db, migrate, login_manager
 from config import config_by_name
 
 def create_app(config_name=None):
+    # No app/__init__.py, logo após registrar os blueprints
+    @app.context_processor
+    def inject_media_url():
+        from app.utils import get_media_url
+        return dict(get_media_url=get_media_url)
     """
     Fábrica de aplicativos (Application Factory).
     """
+    
     app = Flask(__name__, instance_relative_config=True)
 
     # --- Configuração ---
