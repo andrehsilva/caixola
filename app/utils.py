@@ -1,72 +1,79 @@
-# app/utils.py
 import os
 import secrets
-from flask import current_app
+from flask import current_app, url_for
 from werkzeug.utils import secure_filename
+from supabase import create_client
 
-def delete_file_from_uploads(filename):
-    """
-    Exclui um arquivo da pasta de UPLOAD_FOLDER se ele existir
-    e não for o 'default.jpg'.
-    """
-    if not filename or filename == 'default.jpg':
-        return
-    try:
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-    except Exception as e:
-        # É uma boa prática logar esse erro em um sistema real
-        print(f"Erro ao deletar o arquivo {filename}: {e}")
+def get_supabase_client():
+    """Inicializa o cliente Supabase usando as variáveis de ambiente."""
+    url = current_app.config.get('SUPABASE_URL')
+    key = current_app.config.get('SUPABASE_KEY')
+    return create_client(url, key)
 
 def save_picture(form_picture_data):
+    """Faz upload da imagem para o bucket 'uploads' no Supabase."""
+    supabase = get_supabase_client()
+    
+    # Gera nome único
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture_data.filename)
     picture_fn = random_hex + f_ext
 
-    upload_folder = current_app.config['UPLOAD_FOLDER']
-    picture_path = os.path.join(upload_folder, picture_fn)
-
-    # LOG para debug
-    print(f"📁 SALVANDO IMAGEM EM: {picture_path}")
-    print(f"📁 UPLOAD_FOLDER configurado: {upload_folder}")
-    print(f"📁 Pasta existe? {os.path.exists(upload_folder)}")
+    # Lê os bytes do arquivo para upload
+    file_content = form_picture_data.read()
     
-    os.makedirs(upload_folder, exist_ok=True)
-    form_picture_data.save(picture_path)
-    
-    # Verifica se foi salvo
-    print(f"✅ Imagem salva? {os.path.exists(picture_path)}")
-    
-    return picture_fn
+    # Upload para o Supabase Storage
+    # Certifique-se de que o bucket 'uploads' existe e é público
+    try:
+        supabase.storage.from_('uploads').upload(
+            path=picture_fn,
+            file=file_content,
+            file_options={"content-type": form_picture_data.content_type}
+        )
+        return picture_fn
+    except Exception as e:
+        print(f"Erro no upload para Supabase: {e}")
+        return 'default.jpg'
 
 def save_video(form_video_data):
-    """
-    Salva um vídeo do formulário na pasta UPLOAD_FOLDER
-    e retorna o nome do arquivo.
-    """
+    """Faz upload do vídeo para o bucket 'uploads' no Supabase."""
+    supabase = get_supabase_client()
+    
     random_hex = secrets.token_hex(8)
     video_fn = secure_filename(form_video_data.filename)
-    video_name = random_hex + '_' + video_fn
+    video_name = f"{random_hex}_{video_fn}"
     
-    upload_folder = current_app.config['UPLOAD_FOLDER']
-    video_path = os.path.join(upload_folder, video_name)
+    file_content = form_video_data.read()
     
-    os.makedirs(upload_folder, exist_ok=True)
-    
-    form_video_data.save(video_path)
-    return video_name
+    try:
+        supabase.storage.from_('uploads').upload(
+            path=video_name,
+            file=file_content,
+            file_options={"content-type": form_video_data.content_type}
+        )
+        return video_name
+    except Exception as e:
+        print(f"Erro no upload de vídeo para Supabase: {e}")
+        return None
 
 def get_media_url(filename):
-    """
-    Retorna a URL correta para um arquivo de mídia baseado no ambiente
-    """
+    """Retorna a URL pública do arquivo hospedado no Supabase."""
     if not filename:
         return ""
     
-    # Em desenvolvimento, usa o caminho static/uploads
-    if current_app.config.get('DEBUG'):
-        return url_for('static', filename=f'uploads/{filename}')
-    # Em produção, usa o caminho /media/
-    else:
-        return f"/media/{filename}"
+    if filename == 'default.jpg':
+        return url_for('static', filename='default.jpg')
+
+    # Retorna a URL pública do Storage do Supabase
+    url = current_app.config.get('SUPABASE_URL')
+    return f"{url}/storage/v1/object/public/uploads/{filename}"
+
+def delete_file_from_uploads(filename):
+    """Exclui o arquivo do bucket no Supabase."""
+    if not filename or filename == 'default.jpg':
+        return
+    try:
+        supabase = get_supabase_client()
+        supabase.storage.from_('uploads').remove([filename])
+    except Exception as e:
+        print(f"Erro ao deletar arquivo no Supabase: {e}")
