@@ -57,16 +57,14 @@ def save_video(form_video_data):
         return None
 
 def get_media_url(filename):
-    """Retorna a URL pública do arquivo hospedado no Supabase."""
     if not filename:
         return ""
-    
     if filename == 'default.jpg':
         return url_for('static', filename='default.jpg')
 
-    # Retorna a URL pública do Storage do Supabase
-    url = current_app.config.get('SUPABASE_URL')
-    return f"{url}/storage/v1/object/public/uploads/{filename}"
+    # Pega a URL do Supabase das configurações
+    supabase_url = current_app.config.get('SUPABASE_URL')
+    return f"{supabase_url}/storage/v1/object/public/uploads/{filename}"
 
 def delete_file_from_uploads(filename):
     """Exclui o arquivo do bucket no Supabase."""
