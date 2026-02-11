@@ -37,16 +37,6 @@
 {% include "public/sections/_blog.html" %}
 {% endif %}
 
-{# 6. Renderiza a seção CTA #}
-{% if section_name == 'cta' and content.show_cta_section %}
-{% include "public/sections/_cta.html" %}
-{% endif %}
-
-{# 7. Renderiza a seção LOCALIZAÇÃO #}
-{% if section_name == 'location' and content.show_location_section %}
-{% include "public/sections/_location.html" %}
-{% endif %}
-
 {% endfor %}
 
 
