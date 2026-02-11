@@ -1,0 +1,87 @@
+{% extends "public/public_base.html" %}
+{% set full_width_hero = True %}
+{% block public_content %}
+
+{# =================================================================== #}
+{#      LOOP PRINCIPAL DE RENDERIZAÇÃO DAS SEÇÕES                      #}
+{# =================================================================== #}
+{% for section_name in ordered_sections %}
+
+    {# 1. Renderiza a seção HERO #}
+    {% if section_name == 'hero' and content.show_hero_section %}
+        {% include "public/sections/_hero.html" %}
+    {% endif %}
+
+    {# 2. Renderiza a seção SERVIÇOS #}
+    {% if section_name == 'services' and content.show_services_section %}
+        {% include "public/sections/_services.html" %}
+    {% endif %}
+
+    {# 3. Renderiza a seção VALORES #}
+    {% if section_name == 'values' and content.show_values_section %}
+        {% include "public/sections/_values.html" %}
+    {% endif %}
+
+    {# 4. Renderiza a seção ESTRUTURA #}
+    {% if section_name == 'structure' and content.show_structure_section %}
+        {% include "public/sections/_structure.html" %}
+    {% endif %}
+
+    {# 4.1 Renderiza a seção VÍDEOS #}
+    {% if section_name == 'videos' and content.show_videos_section %}
+        {% include "public/sections/_videos.html" %}
+    {% endif %}
+
+    {# 5. Renderiza a seção BLOG #}
+    {% if section_name == 'blog' and content.show_blog_section %}
+        {% include "public/sections/_blog.html" %}
+    {% endif %}
+
+    {# 6. Renderiza a seção CTA #}
+    {% if section_name == 'cta' and content.show_cta_section %}
+        {% include "public/sections/_cta.html" %}
+    {% endif %}
+
+    {# 7. Renderiza a seção LOCALIZAÇÃO #}
+    {% if section_name == 'location' and content.show_location_section %}
+        {% include "public/sections/_location.html" %}
+    {% endif %}
+
+{% endfor %}
+
+
+{# =================================================================== #}
+{#      SCRIPT DA GALERIA (Alpine.js)                                #}
+{# =================================================================== #}
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('galleryModal', () => ({
+        isOpen: false,
+        currentIndex: 0,
+        images: [
+            {% for image in content.structure_images %}
+            '/media/{{ image.filename }}',
+            {% endfor %}
+        ],
+        openModal(index) {
+            this.currentIndex = index;
+            this.isOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        closeModal() {
+            this.isOpen = false;
+            document.body.style.overflow = 'auto';
+        },
+        nextImage() {
+            if (this.currentIndex < this.images.length - 1) { this.currentIndex++; }
+        },
+        prevImage() {
+            if (this.currentIndex > 0) { this.currentIndex--; }
+        },
+        get currentImageUrl() { return this.images[this.currentIndex]; }
+    }));
+});
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-secondary: #f97316;
+    --header-height: 6rem;
+  }
+  body { font-family: 'Poppins', sans-serif; color: #374151; }
+  .nav-link-underline { position: relative; padding-bottom: 0.25rem; }
+  .nav-link-underline::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--color-primary); transition: width 0.3s ease-in-out; }
+  .nav-link-underline:hover::after { width: 100%; }
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col antialiased">
+  
+  <header x-data="{ mobileMenuOpen: false, scrolled: false }"
+        @scroll.window="scrolled = window.pageYOffset > 10"
+        @keydown.escape.window="mobileMenuOpen = false"
+        class="sticky top-0 z-30 bg-white/80 backdrop-blur-lg transition-shadow duration-300"
+        :class="{ 'shadow-lg': scrolled }">
+  <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-24">
+      <a href="{{ url_for('main.index') }}" class="flex-shrink-0 flex items-center space-x-3">
+        <img class="h-20 w-auto" src="{{ url_for('static', filename='images/logo-planeta.webp') }}" alt="Logo Planeta Imaginário">
+      </a>
+      <div class="hidden lg:flex lg:items-center lg:space-x-8">
+        <a href="{{ url_for('main.index') }}" class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">Home</a>
+        
+        {% for lp in nav_landing_pages %}
+        <a href="{{ url_for('main.view_landing_page', slug=lp.slug) }}" class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">{{ lp.title }}</a>
+        {% endfor %}
+        
+        <a href="{{ url_for('main.blog_archive') }}" class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">Blog</a>
+        <a href="{{ url_for('main.contact') }}" class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">Contato</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="hidden sm:flex items-center space-x-4">
+          <a href="{{ site_settings.footer_instagram_link or '#' }}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-indigo-600 transition-colors" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
+          <a href="{{ site_settings.footer_facebook_link or '#' }}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-indigo-600 transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xl"></i></a>
+          
+          
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('dashboard.index') }}" class="text-gray-500 hover:text-indigo-600 transition-colors" aria-label="Painel Administrativo" title="Painel Administrativo">
+            <i class="fas fa-th-large text-xl"></i>
+          </a>
+          {% else %}
+          <a href="{{ url_for('auth.login') }}" class="text-gray-500 hover:text-indigo-600 transition-colors" aria-label="Login" title="Login">
+            <i class="fas fa-user-circle text-xl"></i>
+          </a>
+          {% endif %}
+          
+        </div>
+        <a href="{{ site_settings.footer_whatsapp_link or '#' }}" target="_blank" rel="noopener noreferrer" class="hidden lg:flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+          <i class="fab fa-whatsapp text-lg"></i>
+          <span>Fale Conosco</span>
+        </a>
+        <div class="lg:hidden">
+          <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+            <span class="sr-only">Abrir menu</span>
+            <i class="fas fa-bars text-2xl" x-show="!mobileMenuOpen"></i>
+            <i class="fas fa-times text-2xl" x-show="mobileMenuOpen" x-cloak></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div x-show="mobileMenuOpen" x-transition x-cloak class="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-gray-200">
+    <div class="px-4 pt-4 pb-6">
+        <a href="{{ url_for('main.index') }}" class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">Home</a>
+
+        {% for lp in nav_landing_pages %}
+        <a href="{{ url_for('main.view_landing_page', slug=lp.slug) }}" class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">{{ lp.title }}</a>
+        {% endfor %}
+
+        <a href="{{ url_for('main.blog_archive') }}" class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">Blog</a>
+        <a href="{{ url_for('main.contact') }}" class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">Contato</a>
+        
+        {% if current_user.is_authenticated %}
+        <div class="border-t border-gray-100 mt-4 pt-4">
+            <a href="{{ url_for('dashboard.index') }}" class="block py-2 px-3 font-medium text-indigo-600 rounded-md hover:bg-gray-100">
+                Acessar Painel
+            </a>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+</header>
+
+  <main class="flex-grow {% if not full_width_hero %}pt-24{% endif %}">
+    {% block public_content %}{% endblock %}
+  </main>
+
+  <div x-data="videoModal" 
+     @open-video-modal.document.window="openModal($event.detail.src)"
+     x-cloak>
+    <div x-show="isOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+         @click.away="closeModal">
+
+      <div class="relative bg-black rounded-lg w-full max-w-4xl aspect-video" @click.away="closeModal">
+        <button @click="closeModal" 
+                class="absolute -top-12 -right-2 text-white hover:text-gray-300 text-3xl z-10 bg-red-600 w-10 h-10 rounded-full flex items-center justify-center">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <video x-show="videoSrc" 
+               class="w-full h-full rounded-lg" 
+               controls 
+               autoplay
+               x-bind:src="videoSrc">
+          Seu navegador não suporta o elemento de vídeo.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-800 text-white">
+    <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img class="h-12 w-auto mb-4" src="{{ url_for('static', filename='images/logo-planeta.webp') }}" alt="Planeta Imaginário">
+          <p class="text-gray-400">Criando momentos mágicos...</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Links Rápidos</h3>
+          <ul class="space-y-2">
+            <li><a href="{{ url_for('main.index') }}" class="text-gray-400 hover:text-white">Home</a></li>
+            <li><a href="{{ url_for('main.blog_archive') }}" class="text-gray-400 hover:text-white">Blog</a></li>
+            <li><a href="{{ url_for('main.contact') }}" class="text-gray-400 hover:text-white">Contato</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Política de Privacidade</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Contato</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3"></i><span>{{ site_settings.footer_address | nl2br if site_settings }}</span></li>
+            <li class="flex items-center"><i class="fas fa-phone-alt mr-3"></i><span>{{ site_settings.footer_phone if site_settings }}</span></li>
+            <li class="flex items-center"><i class="fas fa-envelope mr-3"></i><span>{{ site_settings.footer_email if site_settings }}</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-500">
+        <p>{{ site_settings.footer_copyright_text if site_settings }}</p>
+        <p class="text-sm mt-2">Feito por <a href="https://sacadaweb.com.br" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-400 hover:text-white">SacadaWeb</a></p>
+      </div>
+    </div>
+  </footer>
+  
+  <a href="{{ site_settings.footer_whatsapp_link or '#' }}" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-20 h-14 w-14 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 hover:scale-105 transition-transform">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+  
+  <div x-data="backToTopHandler" class="fixed bottom-24 right-6 z-20">
+      <button x-show="visible" x-transition @click="scrollToTop" class="h-14 w-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-700 hover:scale-105 transition-transform">
+          <i class="fas fa-arrow-up"></i>
+      </button>
+  </div>
+  
+  <div x-data="consentBanner" x-show="showBanner" x-cloak 
+       x-transition:enter="transition ease-out duration-500" 
+       x-transition:enter-start="transform translate-y-full" 
+       x-transition:enter-end="transform translate-y-0"
+       x-transition:leave="transition ease-in duration-300" 
+       x-transition:leave-start="transform translate-y-0" 
+       x-transition:leave-end="transform translate-y-full"
+       class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-5 z-50 shadow-2xl">
+      <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-300 text-center sm:text-left">
+              🍪 Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa <a href="{{ url_for('main.privacy_policy') }}" target="_blank" class="font-semibold text-white underline hover:text-orange-400">Política de Privacidade</a>.
+          </p>
+          <button @click="acceptConsent" class="flex-shrink-0 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg shadow-md">
+              Entendi
+          </button>
+      </div>
+  </div>
+</div>
+
+{% if active_popup %}
+<div x-data="popupModal" x-show="showPopup" x-cloak 
+     x-transition:enter="transition ease-out duration-300" 
+     x-transition:enter-start="opacity-0" 
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200" 
+     x-transition:leave-start="opacity-100" 
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-40 p-4">
+    <div @click.away="closePopup" x-show="showPopup" 
+         x-transition:enter="transition ease-out duration-300" 
+         x-transition:enter-start="opacity-0 scale-95" 
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200" 
+         x-transition:leave-start="opacity-100 scale-100" 
+         x-transition:leave-end="opacity-0 scale-95"
+         class="relative bg-white rounded-lg shadow-xl max-w-3xl w-full">
+        <button @click="closePopup" class="absolute -top-3 -right-3 h-10 w-10 bg-red-600 text-white rounded-full flex items-center justify-center z-10 hover:bg-red-700 text-2xl font-bold">&times;</button>
+        <a href="{{ active_popup.target_url }}" target="_blank" rel="noopener">
+              <img src="/media/{{ active_popup.image_filename }}" alt="{{ active_popup.title }}" class="rounded-lg w-full h-auto object-contain">
+          </a>
+    </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('alpine:init', () => {
+    // Componente do Modal de Vídeo Global
+    // Componente do Modal de Vídeo Global (Versão simplificada)
+    Alpine.data('videoModal', () => ({
+        isOpen: false,
+        videoSrc: '',
+        
+        // O método init() FOI REMOVIDO. Não é mais necessário.
+        
+        openModal(src) {
+            console.log('Evento recebido! Abrindo modal com vídeo:', src); // NOVO DEBUG
+            this.videoSrc = src;
+            this.isOpen = true;
+            document.body.style.overflow = 'hidden';
+            
+            // Foca no modal para funcionar com teclado
+            this.$nextTick(() => {
+                const videoElement = this.$el.querySelector('video');
+                if (videoElement) {
+                    videoElement.focus();
+                }
+            });
+        },
+        
+        closeModal() {
+            this.isOpen = false;
+            document.body.style.overflow = 'auto';
+            
+            // Pausa o vídeo quando o modal fecha
+            const videoElement = this.$el.querySelector('video');
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0;
+            }
+            
+            // Limpa o src após um delay para evitar flicker
+            setTimeout(() => {
+                this.videoSrc = '';
+            }, 300);
+        }
+    }));
+
+    // Componente do Banner de Consentimento
+    Alpine.data('consentBanner', () => ({
+        showBanner: false,
+        
+        init() {
+            const hasConsent = localStorage.getItem('planeta_privacy_consent');
+            if (hasConsent !== 'accepted') {
+                setTimeout(() => {
+                    this.showBanner = true;
+                }, 1000);
+            }
+        },
+        
+        acceptConsent() {
+            localStorage.setItem('planeta_privacy_consent', 'accepted');
+            this.showBanner = false;
+        }
+    }));
+
+    // Componente do Popup Modal
+    Alpine.data('popupModal', () => ({
+        showPopup: false,
+        displayMode: '{{ active_popup.display_mode if active_popup else "show_once" }}',
+        popupId: '{{ active_popup.id if active_popup else "0" }}',
+        storageKey: '',
+        
+        init() {
+            this.storageKey = `planeta_popup_${this.popupId}_closed`;
+            
+            if (this.displayMode === 'always_show') {
+                setTimeout(() => { this.showPopup = true; }, 2500);
+            } else if (this.displayMode === 'show_once') {
+                if (!localStorage.getItem(this.storageKey)) {
+                    setTimeout(() => { this.showPopup = true; }, 2500);
+                }
+            }
+        },
+        
+        closePopup() {
+            this.showPopup = false;
+            if (this.displayMode === 'show_once') {
+                localStorage.setItem(this.storageKey, 'true');
+            }
+        }
+    }));
+
+    // Componente do Botão "Voltar ao Topo"
+    Alpine.data('backToTopHandler', () => ({
+        visible: false,
+        
+        init() {
+            window.addEventListener('scroll', () => { this.visible = window.pageYOffset > 300; });
+        },
+        
+        scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }));
+});
+
+// Lógica de Rolagem Suave para links internos
+document.addEventListener('DOMContentLoaded', () => {
+    const headerHeight = 96; 
+    
+    const smoothScrollTo = (hash) => {
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+    };
+    
+    document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            if (this.pathname === window.location.pathname) {
+                e.preventDefault();
+                smoothScrollTo(this.hash);
+            }
+        });
+    });
+    
+    if (window.location.hash) {
+        setTimeout(() => smoothScrollTo(window.location.hash), 100);
+    }
+});
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Playground",
+  "name": "{{ site_settings.business_name if site_settings }}",
+  "description": "{{ site_settings.site_description if site_settings }}",
+  "image": "{{ url_for('static', filename='images/logo-planeta.webp', _external=True) }}",
+  "url": "{{ url_for('main.index', _external=True) }}",
+  "telephone": "+55{{ site_settings.footer_phone.replace('(', '').replace(')', '').replace('-', '').replace(' ', '') if site_settings and site_settings.footer_phone else '' }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ site_settings.footer_address.splitlines()[0] if site_settings and site_settings.footer_address else '' }}",
+    "addressLocality": "{{ site_settings.footer_address.splitlines()[1].split(',')[0] if site_settings and site_settings.footer_address and site_settings.footer_address.splitlines()|length > 1 else '' }}",
+    "addressRegion": "{{ site_settings.footer_address.splitlines()[1].split(',')[1].strip() if site_settings and site_settings.footer_address and site_settings.footer_address.splitlines()|length > 1 and site_settings.footer_address.splitlines()[1].split(',')|length > 1 else '' }}",
+    "addressCountry": "BR"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "10:00",
+      "closes": "22:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Sunday", "PublicHolidays"],
+      "opens": "12:00",
+      "closes": "20:00"
+    }
+  ],
+  "sameAs": [
+    "{{ site_settings.footer_instagram_link if site_settings }}",
+    "{{ site_settings.footer_facebook_link if site_settings }}"
+  ] 
+}
+</script>
+{% endblock %}

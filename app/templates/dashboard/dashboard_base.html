@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div x-data="{ mobileMenuOpen: false, contentMenuOpen: false, userMenuOpen: false, deleteModalOpen: false, deleteUrl: '' }" class="min-h-screen bg-gray-50 md:flex">
+    
+    <div class="hidden md:flex md:flex-shrink-0">
+        <div class="flex flex-col w-64">
+            <div class="flex items-center h-16 flex-shrink-0 px-4 bg-white border-b border-gray-200">
+                <img class="h-10 w-auto" src="{{ url_for('static', filename='images/logo-planeta.webp') }}" alt="Logo Planeta Imaginário">
+            </div>
+            <div class="flex-1 flex flex-col overflow-y-auto bg-white border-r border-gray-200">
+                <nav class="flex-1 px-4 py-4 space-y-2">
+                    <a href="{{ url_for('dashboard.index') }}" class="{% if request.endpoint == 'dashboard.index' %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-home mr-3 text-lg w-6 text-center"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('dashboard.edit_homepage') }}" class="{% if 'edit_homepage' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-desktop mr-3 text-lg w-6 text-center"></i> HomePage
+                    </a>
+                    
+                    <div @click.away="contentMenuOpen = false" class="relative">
+                        <button @click="contentMenuOpen = !contentMenuOpen" class="w-full text-left {% if 'post' in request.endpoint or 'category' in request.endpoint or 'popup' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-pencil-alt mr-3 text-lg w-6 text-center"></i>
+                            <span class="flex-1">Conteúdo</span>
+                            <svg class="w-4 h-4 ml-2 transform transition-transform" :class="{'rotate-180': contentMenuOpen}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div x-show="contentMenuOpen" x-transition class="mt-2 space-y-1 pl-8">
+                            <a href="{{ url_for('dashboard.list_posts') }}" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100">Postagens</a>
+                            <a href="{{ url_for('dashboard.list_categories') }}" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100">Categorias</a>
+                            <a href="{{ url_for('dashboard.list_popups') }}" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100">Popups</a>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('dashboard.list_landing_pages') }}" class="{% if 'landing' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-file-alt mr-3 text-lg w-6 text-center"></i> Landing Pages
+                    </a>
+                    <a href="{{ url_for('dashboard.leads') }}" class="{% if 'leads' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-bullhorn mr-3 text-lg w-6 text-center"></i> Leads
+                    </a>
+                    <a href="{{ url_for('dashboard.list_clients') }}" class="{% if 'client' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-users mr-3 text-lg w-6 text-center"></i> Clientes
+                    </a>
+                    <a href="{{ url_for('dashboard.list_users') }}" class="{% if 'user' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-users-cog mr-3 text-lg w-6 text-center"></i> Usuários
+                    </a>
+                    <a href="{{ url_for('dashboard.settings') }}" class="{% if 'settings' in request.endpoint %}bg-indigo-100 text-indigo-800{% else %}text-gray-600 hover:bg-gray-100{% endif %} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-cog mr-3 text-lg w-6 text-center"></i> Configurações
+                    </a>
+                    <a href="{{ url_for('main.index') }}" target="_blank" class="text-gray-600 hover:bg-gray-100 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-globe-americas mr-3 text-lg w-6 text-center"></i> Ver Site
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="mobileMenuOpen" class="fixed inset-0 flex z-40 md:hidden" role="dialog" aria-modal="true" x-cloak>
+        <div x-show="mobileMenuOpen" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-600 bg-opacity-75" @click="mobileMenuOpen = false" aria-hidden="true"></div>
+        
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" class="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+            <div class="absolute top-0 right-0 -mr-12 pt-2">
+                <button @click="mobileMenuOpen = false" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span class="sr-only">Fechar menu</span>
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+                <div class="flex-shrink-0 flex items-center px-4">
+                     <img class="h-10 w-auto" src="{{ url_for('static', filename='images/logo-planeta.webp') }}" alt="Logo Planeta Imaginário">
+                </div>
+                <nav class="mt-8 px-2 space-y-1">
+                    <a href="{{ url_for('dashboard.index') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-home mr-4 text-lg w-6 text-center"></i>Dashboard</a>
+                    <a href="{{ url_for('dashboard.edit_homepage') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-desktop mr-4 text-lg w-6 text-center"></i>HomePage</a>
+                    <div @click.away="contentMenuOpen = false">
+                        <button @click="contentMenuOpen = !contentMenuOpen" class="w-full text-left text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                            <i class="fas fa-pencil-alt mr-4 text-lg w-6 text-center"></i>
+                            <span class="flex-1">Conteúdo</span>
+                            <svg class="w-5 h-5 ml-2 transform transition-transform" :class="{'rotate-180': contentMenuOpen}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div x-show="contentMenuOpen" x-transition class="mt-1 space-y-1 pl-9">
+                            <a href="{{ url_for('dashboard.list_posts') }}" class="block px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-100">Postagens</a>
+                            <a href="{{ url_for('dashboard.list_categories') }}" class="block px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-100">Categorias</a>
+                            <a href="{{ url_for('dashboard.list_popups') }}" class="block px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-100">Popups</a>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('dashboard.list_landing_pages') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-file-alt mr-4 text-lg w-6 text-center"></i>Landing Pages</a>
+                    <a href="{{ url_for('dashboard.leads') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-bullhorn mr-4 text-lg w-6 text-center"></i>Leads</a>
+                    <a href="{{ url_for('dashboard.list_clients') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-users mr-4 text-lg w-6 text-center"></i>Clientes</a>
+                    <a href="{{ url_for('dashboard.list_users') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-users-cog mr-4 text-lg w-6 text-center"></i>Usuários</a>
+                    <a href="{{ url_for('dashboard.settings') }}" class="text-gray-600 hover:bg-gray-100 group flex items-center px-2 py-2 text-base font-medium rounded-md"><i class="fas fa-cog mr-4 text-lg w-6 text-center"></i>Configurações</a>
+                </nav>
+            </div>
+            <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
+                <div class="flex-shrink-0 w-full group block">
+                    <div class="flex items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">{{ current_user.username }}</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <a href="{{ url_for('dashboard.change_password') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800">Alterar Senha</a>
+                                <span class="text-gray-300">|</span>
+                                <a href="{{ url_for('auth.logout') }}" class="text-xs font-medium text-red-600 hover:text-red-800">Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col flex-1">
+        <header class="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <button @click="mobileMenuOpen = true" type="button" class="p-2 rounded-md text-gray-500 md:hidden">
+                        <span class="sr-only">Abrir menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="flex-1"></div>
+                    <div @click.away="userMenuOpen = false" class="relative">
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2 text-gray-600 text-sm hover:text-indigo-600">
+                            <span>Olá, {{ current_user.username }}</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div x-show="userMenuOpen" x-transition class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-20" x-cloak>
+                            <a href="{{ url_for('dashboard.change_password') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Alterar Senha</a>
+                            <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="p-4 mb-4 text-sm rounded-lg {% if category == 'success' %}text-green-700 bg-green-100{% elif category == 'danger' %}text-red-700 bg-red-100{% else %}text-blue-700 bg-blue-100{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% block dashboard_content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    
+    <div x-show="deleteModalOpen" class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak>
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="deleteModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="deleteModalOpen = false" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div x-show="deleteModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Excluir Item</h3>
+                            <div class="mt-2"><p class="text-sm text-gray-500">Você tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <form :action="deleteUrl" method="POST" class="w-full sm:w-auto">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Excluir</button>
+                    </form>
+                    <button @click="deleteModalOpen = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
