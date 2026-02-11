@@ -35,7 +35,10 @@ def edit_homepage():
         'services': ServicesSectionForm(obj=content),
         'values': ValuesSectionForm(obj=content),
         'structure': StructureSectionForm(obj=content),
-        
+        'videos': VideosSectionForm(obj=content),
+        'blog': BlogSectionForm(obj=content),
+        'cta': CtaSectionForm(obj=content),
+        'location': LocationSectionForm(obj=content)
     }
 
     ordered_sections_admin = content.section_order.split(',') if content.section_order else []
@@ -138,7 +141,10 @@ def update_structure_section():
             'services': ServicesSectionForm(obj=content),
             'values': ValuesSectionForm(obj=content),
             'structure': form,  # Usa o formulário com erros
-           
+            'videos': VideosSectionForm(obj=content),
+            'blog': BlogSectionForm(obj=content),
+            'cta': CtaSectionForm(obj=content),
+            'location': LocationSectionForm(obj=content)
         }
         ordered_sections_admin = content.section_order.split(',') if content.section_order else []
         return render_template(
@@ -190,16 +196,7 @@ def update_blog_section():
         flash('Seção "Blog" atualizada com sucesso!', 'success')
     return redirect(url_for('dashboard.edit_homepage'))
 
-@bp.route('/homepage/cta', methods=['POST'])
-@login_required
-def update_cta_section():
-    content = HomePageContent.query.first_or_404()
-    form = CtaSectionForm()
-    if form.validate_on_submit():
-        form.populate_obj(content)
-        db.session.commit()
-        flash('Seção "CTA Final" atualizada com sucesso!', 'success')
-    return redirect(url_for('dashboard.edit_homepage'))
+
 
 @bp.route('/homepage/location', methods=['POST'])
 @login_required
