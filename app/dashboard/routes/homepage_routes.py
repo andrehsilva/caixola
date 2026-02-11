@@ -196,7 +196,16 @@ def update_blog_section():
         flash('Seção "Blog" atualizada com sucesso!', 'success')
     return redirect(url_for('dashboard.edit_homepage'))
 
-
+@bp.route('/homepage/cta', methods=['POST'])
+@login_required
+def update_cta_section():
+    content = HomePageContent.query.first_or_404()
+    form = CtaSectionForm()
+    if form.validate_on_submit():
+        form.populate_obj(content)
+        db.session.commit()
+        flash('Seção "CTA Final" atualizada com sucesso!', 'success')
+    return redirect(url_for('dashboard.edit_homepage'))
 
 @bp.route('/homepage/location', methods=['POST'])
 @login_required
