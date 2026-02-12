@@ -33,7 +33,7 @@
                             @click="openModal({{ loop.index0 }})" 
                             class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-opacity-50 rounded-2xl overflow-hidden">
                             <!-- CORREÇÃO APLICADA AQUI -->
-                            <img src="/media/{{ image.filename }}" 
+                            <img src="{{ get_media_url(image.filename) }}" 
                                  alt="{{ image.caption }}" 
                                  class="w-full h-full object-cover rounded-2xl shadow-md group-hover:shadow-xl transition-all duration-300">
                         </button>
