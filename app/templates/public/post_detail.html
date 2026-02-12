@@ -104,7 +104,7 @@
                 currentIndex: 0,
                 images: [
                     {% for image in post.gallery_images %}
-                '/media/{{ image.filename }}'{% if not loop.last %}, {% endif %}
+                '{{ get_media_url(image.filename) }}'{% if not loop.last %}, {% endif %}
             {% endfor %}
             ],
             openModal(index) {
