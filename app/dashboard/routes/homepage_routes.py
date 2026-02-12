@@ -40,8 +40,11 @@ def edit_homepage():
         'cta': CtaSectionForm(obj=content),
         'location': LocationSectionForm(obj=content)
     }
+    secoes_para_remover = ['videos', 'location', 'cta', 'blog']
+    raw_order = content.section_order.split(',') if content.section_order else []
+    ordered_sections_admin = [s for s in raw_order if s not in secoes_para_remover]
 
-    ordered_sections_admin = content.section_order.split(',') if content.section_order else []
+    #ordered_sections_admin = content.section_order.split(',') if content.section_order else []
     
     return render_template(
         'dashboard/manage_homepage.html',
