@@ -1,10 +1,7 @@
-# app/__init__.py
 import os
 from flask import Flask
 from markupsafe import Markup
 from . import commands
-
-# Importando as extensões
 from .extensions import db, migrate, login_manager
 from config import config_by_name
 
@@ -25,16 +22,14 @@ def create_app(config_name=None):
     # Registra os comandos CLI
     commands.register_commands(app)
 
-    # --- Blueprints e Componentes ---
     with app.app_context():
         from . import models
-        
-        # Importa e registra os Blueprints
         from .main import bp as main_bp
-        app.register_blueprint(main_bp)
         from .auth import bp as auth_bp
-        app.register_blueprint(auth_bp, url_prefix='/auth')
         from .dashboard import bp as dashboard_bp
+
+        app.register_blueprint(main_bp)
+        app.register_blueprint(auth_bp, url_prefix='/auth')
         app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
 
         # ✅ FILTRO PARA QUEBRA DE LINHA
@@ -42,7 +37,7 @@ def create_app(config_name=None):
         def nl2br_filter(s):
             return Markup(s.replace('\n', '<br>')) if s else ''
 
-        # ✅ INJETOR DE URL DO SUPABASE (Para funcionar nos HTMLs)
+        # ✅ INJETOR DE URL DO SUPABASE (O PULO DO GATO)
         @app.context_processor
         def inject_media_url():
             from app.utils import get_media_url

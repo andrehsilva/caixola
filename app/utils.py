@@ -62,6 +62,7 @@ def get_media_url(filename):
     if filename == 'default.jpg':
         return url_for('static', filename='default.jpg')
 
+    # rstrip remove barras extras no final da URL do Supabase
     supabase_url = current_app.config.get('SUPABASE_URL').rstrip('/')
     return f"{supabase_url}/storage/v1/object/public/uploads/{filename}"
 
