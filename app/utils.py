@@ -19,6 +19,8 @@ def save_picture(form_picture_data):
     _, f_ext = os.path.splitext(form_picture_data.filename)
     picture_fn = random_hex + f_ext
 
+    form_picture_data.seek(0)
+
     # Lê os bytes do arquivo para upload
     file_content = form_picture_data.read()
     

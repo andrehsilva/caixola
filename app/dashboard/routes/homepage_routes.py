@@ -122,10 +122,20 @@ def update_structure_section():
         content.structure_feature2_text = form.structure_feature2_text.data
 
         # Processa as novas imagens da galeria
+        # app/dashboard/routes/homepage_routes.py
+
         if form.gallery_images.data:
             for image_file in form.gallery_images.data:
-                if image_file:
+                if image_file and image_file.filename != '': # Garante que há um arquivo
                     filename = save_picture(image_file)
+                    
+                    # Debug: Adicione este print para ver no log do EasyPanel o que está voltando
+                    print(f"DEBUG ESTRUTURA: Arquivo processado: {filename}")
+                    
+                    if filename == 'default.jpg':
+                        flash(f'Erro ao subir a imagem {image_file.filename} para o Supabase.', 'danger')
+                        continue
+
                     caption = os.path.splitext(image_file.filename)[0].replace('_', ' ').title()
                     new_image = StructureImage(filename=filename, caption=caption, homepage_content_id=content.id)
                     db.session.add(new_image)
