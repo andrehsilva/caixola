@@ -24,7 +24,7 @@
                 <td class="p-3 text-gray-700">{{ popup.title }}</td>
                 <td class="p-3">
                     <!-- CORREÇÃO APLICADA AQUI -->
-                    <img src="/media/{{ popup.image_filename }}" alt="{{ popup.title }}" class="h-16 w-auto rounded-md object-cover">
+                    <img src="get_media_url{{ popup.image_filename }}" alt="{{ popup.title }}" class="h-16 w-auto rounded-md object-cover">
                 </td>
                 <td class="p-3">
                     {% if popup.is_active %}

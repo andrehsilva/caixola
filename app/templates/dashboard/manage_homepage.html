@@ -11,7 +11,7 @@
     'hero': 'Hero (Topo da Página)',
     'services': 'O que oferecemos',
     'values': 'Por que nos escolher',
-    'structure': 'Infraestrutura',
+    'structure': 'Cenários que Encantam',
     'videos': 'Nossos Vídeos',
     'blog': 'Diário de bordo (Blog)',
     'cta': 'CTA Final',
@@ -37,8 +37,7 @@
                     <div class="p-4">
                         <input type="hidden" name="section_order" id="section_order_input"
                             value="{{ content.section_order }}">
-                        <p class="text-sm text-gray-500 mb-4">Arraste para reordenar as seções na sua página inicial.
-                        </p>
+                        <p class="text-sm text-gray-500 mb-4">Arraste para reordenar as seções na sua página inicial.</p>
 
                         <ul id="sortable-sections" class="space-y-2">
                             {% for section_key in ordered_sections_admin %}
@@ -49,8 +48,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
-                                <span class="font-medium text-gray-700">{{ section_titles.get(section_key, section_key)
-                                    }}</span>
+                                <span class="font-medium text-gray-700">{{ section_titles.get(section_key, section_key) }}</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -88,8 +86,7 @@
                         <fieldset>
                             <div class="bg-slate-100 p-4 rounded-md mb-6 border border-slate-200">
                                 <div class="flex items-center">
-                                    {{ form.show_videos_section(class="h-4 w-4 text-indigo-600 border-gray-300 rounded
-                                    focus:ring-indigo-500") }}
+                                    {{ form.show_videos_section(class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500") }}
                                     <label for="{{ form.show_videos_section.id }}"
                                         class="ml-3 block text-sm font-medium text-gray-900">{{
                                         form.show_videos_section.label.text }}</label>
@@ -100,59 +97,41 @@
                                 <div>
                                     {% if content.videos_section_video1 %}<div
                                         class="mb-4 p-4 border rounded-lg bg-gray-50">
-                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 1 Atual:</p><video
-                                            controls class="rounded-lg max-w-full max-h-64 shadow-sm"
-                                            src="/media/{{ content.videos_section_video1 }}"></video>
+                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 1 Atual:</p>
+                                        <video controls class="rounded-lg max-w-full max-h-64 shadow-sm"
+                                            src="{{ get_media_url(content.videos_section_video1) }}"></video>
                                         <div class="mt-4 flex items-center">{{
-                                            form.remove_videos_section_video1(class="h-4 w-4 text-red-600
-                                            border-gray-300 rounded focus:ring-red-500") }}{{
-                                            form.remove_videos_section_video1.label(class="ml-2 text-sm font-medium
-                                            text-gray-800") }}</div>
+                                            form.remove_videos_section_video1(class="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500") }}{{
+                                            form.remove_videos_section_video1.label(class="ml-2 text-sm font-medium text-gray-800") }}</div>
                                     </div>{% endif %}
-                                    {{ form.videos_section_video1.label(class="block text-sm font-medium text-gray-700")
-                                    }}
-                                    {{ form.videos_section_video1(class="mt-1 block w-full text-sm text-gray-500
-                                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm
-                                    file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100")
-                                    }}
+                                    {{ form.videos_section_video1.label(class="block text-sm font-medium text-gray-700") }}
+                                    {{ form.videos_section_video1(class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100") }}
                                 </div>
                                 <div>
                                     {% if content.videos_section_video2 %}<div
                                         class="mb-4 p-4 border rounded-lg bg-gray-50">
-                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 2 Atual:</p><video
-                                            controls class="rounded-lg max-w-full max-h-64 shadow-sm"
-                                            src="/media/{{ content.videos_section_video2 }}"></video>
+                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 2 Atual:</p>
+                                        <video controls class="rounded-lg max-w-full max-h-64 shadow-sm"
+                                            src="{{ get_media_url(content.videos_section_video2) }}"></video>
                                         <div class="mt-4 flex items-center">{{
-                                            form.remove_videos_section_video2(class="h-4 w-4 text-red-600
-                                            border-gray-300 rounded focus:ring-red-500") }}{{
-                                            form.remove_videos_section_video2.label(class="ml-2 text-sm font-medium
-                                            text-gray-800") }}</div>
+                                            form.remove_videos_section_video2(class="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500") }}{{
+                                            form.remove_videos_section_video2.label(class="ml-2 text-sm font-medium text-gray-800") }}</div>
                                     </div>{% endif %}
-                                    {{ form.videos_section_video2.label(class="block text-sm font-medium text-gray-700")
-                                    }}
-                                    {{ form.videos_section_video2(class="mt-1 block w-full text-sm text-gray-500
-                                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm
-                                    file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100")
-                                    }}
+                                    {{ form.videos_section_video2.label(class="block text-sm font-medium text-gray-700") }}
+                                    {{ form.videos_section_video2(class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100") }}
                                 </div>
                                 <div>
                                     {% if content.videos_section_video3 %}<div
                                         class="mb-4 p-4 border rounded-lg bg-gray-50">
-                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 3 Atual:</p><video
-                                            controls class="rounded-lg max-w-full max-h-64 shadow-sm"
-                                            src="/media/{{ content.videos_section_video3 }}"></video>
+                                        <p class="block text-sm font-medium text-gray-700 mb-2">Vídeo 3 Atual:</p>
+                                        <video controls class="rounded-lg max-w-full max-h-64 shadow-sm"
+                                            src="{{ get_media_url(content.videos_section_video3) }}"></video>
                                         <div class="mt-4 flex items-center">{{
-                                            form.remove_videos_section_video3(class="h-4 w-4 text-red-600
-                                            border-gray-300 rounded focus:ring-red-500") }}{{
-                                            form.remove_videos_section_video3.label(class="ml-2 text-sm font-medium
-                                            text-gray-800") }}</div>
+                                            form.remove_videos_section_video3(class="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500") }}{{
+                                            form.remove_videos_section_video3.label(class="ml-2 text-sm font-medium text-gray-800") }}</div>
                                     </div>{% endif %}
-                                    {{ form.videos_section_video3.label(class="block text-sm font-medium text-gray-700")
-                                    }}
-                                    {{ form.videos_section_video3(class="mt-1 block w-full text-sm text-gray-500
-                                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm
-                                    file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100")
-                                    }}
+                                    {{ form.videos_section_video3.label(class="block text-sm font-medium text-gray-700") }}
+                                    {{ form.videos_section_video3(class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100") }}
                                 </div>
                             </div>
                         </fieldset>
@@ -160,8 +139,7 @@
                         <fieldset>
                             <div class="bg-slate-100 p-4 rounded-md mb-6 border border-slate-200">
                                 <div class="flex items-center">
-                                    {{ form.show_structure_section(class="h-4 w-4 text-indigo-600 border-gray-300
-                                    rounded focus:ring-indigo-500") }}
+                                    {{ form.show_structure_section(class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500") }}
                                     <label for="{{ form.show_structure_section.id }}"
                                         class="ml-3 block text-sm font-medium text-gray-900">{{
                                         form.show_structure_section.label.text }}</label>
@@ -179,10 +157,7 @@
                             <div class="mt-6 space-y-4">
                                 <div>
                                     {{ form.gallery_images.label(class="block text-sm font-medium text-gray-700") }}
-                                    {{ form.gallery_images(class="mt-1 block w-full text-sm text-gray-500 file:mr-4
-                                    file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold
-                                    file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100",
-                                    multiple="multiple") }}
+                                    {{ form.gallery_images(class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100", multiple="multiple") }}
                                 </div>
                             </div>
                             <div class="mt-8 pt-6 border-t border-gray-200">
@@ -191,7 +166,7 @@
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     {% for image in content.structure_images %}
                                     <div class="relative group">
-                                        <img src="/media/{{ image.filename }}" alt="{{ image.caption }}"
+                                        <img src="{{ get_media_url(image.filename) }}" alt="{{ image.caption }}"
                                             class="w-full h-32 object-cover rounded-md">
                                         <div
                                             class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -213,8 +188,7 @@
                             {% for field in form if field.type == 'BooleanField' and field.name.startswith('show_') %}
                             <div class="bg-slate-100 p-4 rounded-md mb-6 border border-slate-200">
                                 <div class="flex items-center">
-                                    {{ field(class="h-4 w-4 text-indigo-600 border-gray-300 rounded
-                                    focus:ring-indigo-500") }}
+                                    {{ field(class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500") }}
                                     <label for="{{ field.id }}" class="ml-3 block text-sm font-medium text-gray-900">{{
                                         field.label.text }}</label>
                                 </div>
@@ -232,8 +206,7 @@
 
                     <div class="p-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
                         {% for field in form if field.type == 'SubmitField' %}
-                        {{ field(class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm
-                        font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700") }}
+                        {{ field(class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700") }}
                         {% endfor %}
                     </div>
                 </form>

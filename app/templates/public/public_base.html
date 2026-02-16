@@ -144,7 +144,7 @@
     <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <img class="h-12 w-auto mb-4" src="{{ url_for('static', filename='images/logo-caixola.jpg') }}"
+          <img class="h-12 w-auto mb-4" src="{{ url_for('static', filename='images/logo-caixola.png') }}"
             alt="Planeta Imaginário">
           <p class="text-gray-400">Criando momentos mágicos...</p>
         </div>
@@ -220,7 +220,7 @@
     <button @click="closePopup"
       class="absolute -top-3 -right-3 h-10 w-10 bg-red-600 text-white rounded-full flex items-center justify-center z-10 hover:bg-red-700 text-2xl font-bold">&times;</button>
     <a href="{{ active_popup.target_url }}" target="_blank" rel="noopener">
-      <img src="/media/{{ active_popup.image_filename }}" alt="{{ active_popup.title }}"
+      <img src="get_media_url{{ active_popup.image_filename }}" alt="{{ active_popup.title }}"
         class="rounded-lg w-full h-auto object-contain">
     </a>
   </div>
