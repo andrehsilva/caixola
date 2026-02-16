@@ -42,7 +42,7 @@
                     if (this.currentIndex > 0) { this.currentIndex--; }
                 },
                 currentImageUrl() {
-                    return `/static/uploads/${this.images[this.currentIndex]}`;
+                    return this.images[this.currentIndex];
                 }
             }
         }
