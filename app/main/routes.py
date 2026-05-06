@@ -47,6 +47,34 @@ def post_detail(slug):
     gallery_filenames = [image.filename for image in post.gallery_images]
     return render_template('public/post_detail.html', post=post, gallery_filenames=gallery_filenames)
 
+@bp.route('/parcerias')
+def partnerships():
+    """Renderiza a página pública com os parceiros da marca."""
+    partners = [
+        {
+            'name': 'Parceiro Exemplo 1',
+            'logo_url': 'https://placehold.co/300x180/e2e8f0/1e293b?text=Parceiro+1',
+            'phone': '(16) 99999-1111',
+            'instagram': 'https://instagram.com/parceiro1',
+            'email': 'contato@parceiro1.com.br'
+        },
+        {
+            'name': 'Parceiro Exemplo 2',
+            'logo_url': 'https://placehold.co/300x180/fef3c7/92400e?text=Parceiro+2',
+            'phone': '(16) 98888-2222',
+            'instagram': 'https://instagram.com/parceiro2',
+            'email': 'atendimento@parceiro2.com.br'
+        },
+        {
+            'name': 'Parceiro Exemplo 3',
+            'logo_url': 'https://placehold.co/300x180/dbeafe/1e3a8a?text=Parceiro+3',
+            'phone': '(16) 97777-3333',
+            'instagram': 'https://instagram.com/parceiro3',
+            'email': 'comercial@parceiro3.com.br'
+        }
+    ]
+    return render_template('public/partnerships.html', partners=partners)
+
 @bp.route('/lp/<slug>')
 def view_landing_page(slug):
     """Renderiza a página de uma landing page publicada."""
