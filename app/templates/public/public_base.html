@@ -71,6 +71,8 @@
 
           <a href="{{ url_for('main.blog_archive') }}"
             class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">Blog</a>
+          <a href="{{ url_for('main.partnerships') }}"
+            class="font-medium text-gray-700 hover:text-indigo-600 nav-link-underline">Parcerias</a>
         </div>
         <div class="flex items-center space-x-4">
           <div class="hidden sm:flex items-center space-x-4">
@@ -124,6 +126,8 @@
 
         <a href="{{ url_for('main.blog_archive') }}"
           class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">Blog</a>
+        <a href="{{ url_for('main.partnerships') }}"
+          class="block py-2 px-3 font-medium text-gray-700 rounded-md hover:bg-gray-100">Parcerias</a>
 
         {% if current_user.is_authenticated %}
         <div class="border-t border-gray-100 mt-4 pt-4">
@@ -154,6 +158,7 @@
           <ul class="space-y-2">
             <li><a href="{{ url_for('main.index') }}" class="text-gray-400 hover:text-white">Home</a></li>
             <li><a href="{{ url_for('main.blog_archive') }}" class="text-gray-400 hover:text-white">Blog</a></li>
+            <li><a href="{{ url_for('main.partnerships') }}" class="text-gray-400 hover:text-white">Parcerias</a></li>
             <li><a href="#" class="text-gray-400 hover:text-white">Política de Privacidade</a></li>
           </ul>
         </div>
