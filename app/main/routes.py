@@ -5,7 +5,7 @@ from flask import render_template, request, abort, flash, redirect, url_for
 
 # --- Imports do Projeto ---
 from app.main import bp
-from app.models import Post, Lead , HomePageContent, LandingPage, Settings
+from app.models import Post, Lead , HomePageContent, LandingPage, Settings, Partner
 from app.extensions import db
 from app.forms import LeadForm
 
@@ -49,30 +49,8 @@ def post_detail(slug):
 
 @bp.route('/parcerias')
 def partnerships():
-    """Renderiza a página pública com os parceiros da marca."""
-    partners = [
-        {
-            'name': 'Parceiro Exemplo 1',
-            'logo_url': 'https://placehold.co/300x180/e2e8f0/1e293b?text=Parceiro+1',
-            'phone': '(16) 99999-1111',
-            'instagram': 'https://instagram.com/parceiro1',
-            'email': 'contato@parceiro1.com.br'
-        },
-        {
-            'name': 'Parceiro Exemplo 2',
-            'logo_url': 'https://placehold.co/300x180/fef3c7/92400e?text=Parceiro+2',
-            'phone': '(16) 98888-2222',
-            'instagram': 'https://instagram.com/parceiro2',
-            'email': 'atendimento@parceiro2.com.br'
-        },
-        {
-            'name': 'Parceiro Exemplo 3',
-            'logo_url': 'https://placehold.co/300x180/dbeafe/1e3a8a?text=Parceiro+3',
-            'phone': '(16) 97777-3333',
-            'instagram': 'https://instagram.com/parceiro3',
-            'email': 'comercial@parceiro3.com.br'
-        }
-    ]
+    """Renderiza a página pública com os parceiros ativos cadastrados no admin."""
+    partners = Partner.query.filter_by(is_active=True).order_by(Partner.name).all()
     return render_template('public/partnerships.html', partners=partners)
 
 @bp.route('/lp/<slug>')

@@ -1,0 +1,17 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block dashboard_content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-sm border">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+  <form method="POST" enctype="multipart/form-data" class="space-y-4">{{ form.hidden_tag() }}
+    <div>{{ form.name.label(class="block text-sm font-medium") }}{{ form.name(class="mt-1 w-full border rounded-lg px-3 py-2") }}</div>
+    <div>{{ form.logo.label(class="block text-sm font-medium") }}{{ form.logo(class="mt-1 w-full border rounded-lg px-3 py-2") }}</div>
+    {% if partner and partner.logo_filename %}<img src="{{ get_media_url(partner.logo_filename) }}" class="h-20 rounded">{% endif %}
+    <div>{{ form.remove_logo() }} {{ form.remove_logo.label }}</div>
+    <div>{{ form.phone.label(class="block text-sm font-medium") }}{{ form.phone(class="mt-1 w-full border rounded-lg px-3 py-2") }}</div>
+    <div>{{ form.instagram.label(class="block text-sm font-medium") }}{{ form.instagram(class="mt-1 w-full border rounded-lg px-3 py-2") }}</div>
+    <div>{{ form.email.label(class="block text-sm font-medium") }}{{ form.email(class="mt-1 w-full border rounded-lg px-3 py-2") }}</div>
+    <div>{{ form.is_active() }} {{ form.is_active.label }}</div>
+    <div class="pt-4">{{ form.submit(class="bg-indigo-600 text-white px-5 py-2 rounded-lg") }}</div>
+  </form>
+</div>
+{% endblock %}

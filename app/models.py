@@ -196,6 +196,22 @@ class Client(db.Model):
 
 
 
+
+class Partner(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    logo_filename = db.Column(db.String(100), nullable=True)
+    phone = db.Column(db.String(30), nullable=True)
+    instagram = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Partner {self.name}>'
+
+
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 

@@ -391,3 +391,14 @@ class LocationSectionForm(FlaskForm):
 class SectionOrderForm(FlaskForm):
     """Formulário vazio, usado apenas para gerar o CSRF token para a reordenação."""
     pass
+
+
+class PartnerForm(FlaskForm):
+    name = StringField('Nome do Parceiro', validators=[DataRequired(), Length(max=120)])
+    logo = FileField('Logo', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'webp'], 'Apenas imagens são permitidas!')])
+    remove_logo = BooleanField('Remover logo atual')
+    phone = StringField('Telefone', validators=[Optional(), Length(max=30)])
+    instagram = StringField('Instagram (URL completa)', validators=[Optional(), Length(max=255)])
+    email = StringField('E-mail', validators=[Optional(), Email(message='E-mail inválido.'), Length(max=120)])
+    is_active = BooleanField('Exibir no site')
+    submit = SubmitField('Salvar Parceiro')
