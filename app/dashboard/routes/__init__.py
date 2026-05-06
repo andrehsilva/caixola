@@ -13,5 +13,6 @@ from app.dashboard.routes import (
     leads_routes,
     landingpage_routes,
     popup_routes,
+    partner_routes,
     general_routes
 )
