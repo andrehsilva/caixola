@@ -5,7 +5,7 @@ from flask import render_template, request, abort, flash, redirect, url_for
 
 # --- Imports do Projeto ---
 from app.main import bp
-from app.models import Post, Lead , HomePageContent, LandingPage, Settings
+from app.models import Post, Lead , HomePageContent, LandingPage, Settings, Partner
 from app.extensions import db
 from app.forms import LeadForm
 
@@ -52,6 +52,13 @@ def view_landing_page(slug):
     """Renderiza a página de uma landing page publicada."""
     lp = LandingPage.query.filter_by(slug=slug, is_published=True).first_or_404()
     return render_template('public/view_landing_page.html', lp=lp)
+
+
+@bp.route('/parcerias')
+def partnerships():
+    """Renderiza a página pública com os parceiros ativos cadastrados no admin."""
+    partners = Partner.query.filter_by(is_active=True).order_by(Partner.name).all()
+    return render_template('public/partnerships.html', partners=partners)
 
 @bp.route('/politica-de-privacidade')
 def privacy_policy():
