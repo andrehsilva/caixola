@@ -61,12 +61,26 @@ def save_video(form_video_data):
 def get_media_url(filename):
     if not filename:
         return ""
+        
     if filename == 'default.jpg':
         return url_for('static', filename='default.jpg')
 
     # rstrip remove barras extras no final da URL do Supabase
-    supabase_url = current_app.config.get('SUPABASE_URL').rstrip('/')
-    return f"{supabase_url}/storage/v1/object/public/uploads/{filename}"
+    # supabase_url = current_app.config.get('SUPABASE_URL').rstrip('/')
+    # return f"{supabase_url}/storage/v1/object/public/uploads/{filename}"
+    
+    # Se já vier URL completa (http/https), usa diretamente.
+    if isinstance(filename, str) and filename.startswith(('http://', 'https://')):
+        return filename
+
+    supabase_url = (current_app.config.get('SUPABASE_URL') or '').rstrip('/')
+    safe_filename = str(filename).lstrip('/')
+
+    # Se o valor já veio com caminho do storage, apenas prefixa o domínio.
+    if safe_filename.startswith('storage/v1/object/public/uploads/'):
+        return f"{supabase_url}/{safe_filename}"
+
+    return f"{supabase_url}/storage/v1/object/public/uploads/{safe_filename}"
 
 def delete_file_from_uploads(filename):
     """Exclui o arquivo do bucket no Supabase."""
