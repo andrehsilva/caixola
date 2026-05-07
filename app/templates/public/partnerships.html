@@ -5,24 +5,28 @@
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto text-center mb-12">
       <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Nossos Parceiros</h1>
-      <p class="mt-4 text-lg text-gray-600">
-        Conheça as empresas e profissionais que caminham com a Caixola e ajudam a entregar experiências incríveis.
-      </p>
     </div>
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for partner in partners %}
-      <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-        <img src="{{ partner.logo_url }}" alt="Logo {{ partner.name }}" class="w-full h-44 object-cover">
+      <article class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+        {% if partner.logo_filename and partner.logo_filename != 'default.jpg' %}
+        <img src="{{ get_media_url(partner.logo_filename) }}" alt="Logo {{ partner.name }}" class="w-full h-44 object-cover" loading="lazy">
+        {% else %}
+        <div class="h-44 w-full bg-indigo-100 flex items-center justify-center">
+          <img src="{{ url_for('static', filename='images/logo-caixola.png') }}" alt="Logo padrão" class="h-20 w-auto opacity-80">
+        </div>
+        {% endif %}
         <div class="p-6">
           <h2 class="text-xl font-semibold text-gray-900">{{ partner.name }}</h2>
           <ul class="mt-4 space-y-3 text-sm text-gray-600">
-            <li class="flex items-center"><i class="fas fa-phone-alt mr-3 text-indigo-600"></i>{{ partner.phone }}</li>
-            <li class="flex items-center"><i class="fab fa-instagram mr-3 text-indigo-600"></i><a href="{{ partner.instagram }}" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">{{ partner.instagram }}</a></li>
-            <li class="flex items-center"><i class="fas fa-envelope mr-3 text-indigo-600"></i><a href="mailto:{{ partner.email }}" class="hover:text-indigo-700">{{ partner.email }}</a></li>
+            {% if partner.phone %}<li class="flex items-center"><i class="fas fa-phone-alt mr-3 text-indigo-600"></i>{{ partner.phone }}</li>{% endif %}
+            {% if partner.instagram %}<li class="flex items-center"><i class="fab fa-instagram mr-3 text-indigo-600"></i><a href="{{ partner.instagram }}" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-700">{{ partner.instagram }}</a></li>{% endif %}
+            {% if partner.email %}<li class="flex items-center"><i class="fas fa-envelope mr-3 text-indigo-600"></i><a href="mailto:{{ partner.email }}" class="hover:text-indigo-700">{{ partner.email }}</a></li>{% endif %}
           </ul>
         </div>
       </article>
+      {% else %}
+      <p class="text-gray-500 col-span-full text-center">Em breve você verá nossos parceiros por aqui.</p>
       {% endfor %}
     </div>
   </div>
